@@ -23,6 +23,7 @@ The aim of this project is to meet this need and offer a mechanism to check spec
     + [Apache CXF](http://cxf.apache.org)
     + [Resteasy](https://resteasy.github.io)
     + [Restlet](https://restlet.com/open-source/documentation/user-guide/2.3/extensions/jaxrs)
+  + [ktor](docs/ktor.md)
   
 Please refer to the list of [all features](docs/features.md). To check the feature support for each converter.
 It is possible that not every converter supports every feature. Only the intersection of the features of two `EndpointConverter`s is used for the matching. Please keep that in mind regarding the equality of implementation and specification.
