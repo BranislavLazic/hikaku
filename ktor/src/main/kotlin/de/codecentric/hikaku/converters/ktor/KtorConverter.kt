@@ -3,8 +3,10 @@ package de.codecentric.hikaku.converters.ktor
 import de.codecentric.hikaku.SupportedFeatures
 import de.codecentric.hikaku.SupportedFeatures.Feature
 import de.codecentric.hikaku.converters.AbstractEndpointConverter
+import de.codecentric.hikaku.converters.ktor.HttpMethodDeclaration.POST_DECLARATION
+import de.codecentric.hikaku.converters.ktor.HttpMethodDeclaration.PRE_DECLARATION
 import de.codecentric.hikaku.converters.ktor.extensions.hikakuHttpMethod
-import de.codecentric.hikaku.converters.ktor.extensions.pathParameters
+import de.codecentric.hikaku.converters.ktor.extensions.hikakuPathParameters
 import de.codecentric.hikaku.endpoints.Endpoint
 import io.ktor.routing.HttpMethodRouteSelector
 import io.ktor.routing.Route
@@ -34,19 +36,38 @@ class KtorConverter(private val routing: Routing): AbstractEndpointConverter() {
             }
         }
 
-        if (route.selector is HttpMethodRouteSelector) {
-            val normalizedPath = normalizePath(route.parent.toString())
+        println(route.toString())
 
+        when {
+            route.selector is HttpMethodRouteSelector -> POST_DECLARATION
+            route.parent?.selector is HttpMethodRouteSelector -> PRE_DECLARATION
+            else ->null
+        }?.let {
             return listOf(
-                    Endpoint(
-                            path = normalizedPath,
-                            httpMethod = (route.selector as HttpMethodRouteSelector).hikakuHttpMethod(),
-                            pathParameters = route.pathParameters()
-                    )
+                        createEndpoint(route, it)
             )
         }
 
         return emptyList()
+    }
+
+    private fun createEndpoint(route: Route, declarationType: HttpMethodDeclaration): Endpoint {
+        return when(declarationType) {
+            PRE_DECLARATION -> {
+                Endpoint(
+                        path = normalizePath(route.parent?.parent.toString() + route.selector.toString()),
+                        httpMethod = (route.parent?.selector as HttpMethodRouteSelector).hikakuHttpMethod(),
+                        pathParameters = route.hikakuPathParameters()
+                )
+            }
+            POST_DECLARATION -> {
+                Endpoint(
+                        path = normalizePath(route.parent.toString()),
+                        httpMethod = (route.selector as HttpMethodRouteSelector).hikakuHttpMethod(),
+                        pathParameters = route.hikakuPathParameters()
+                )
+            }
+        }
     }
 
     /**
@@ -58,4 +79,8 @@ class KtorConverter(private val routing: Routing): AbstractEndpointConverter() {
      *      /todos/{id}
      */
     private fun normalizePath(path: String) = path.replace("?", "")
+}
+
+private enum class HttpMethodDeclaration {
+    PRE_DECLARATION, POST_DECLARATION
 }

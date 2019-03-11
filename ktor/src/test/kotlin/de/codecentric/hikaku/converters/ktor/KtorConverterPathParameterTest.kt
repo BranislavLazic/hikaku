@@ -18,6 +18,30 @@ class KtorConverterPathParameterTest {
     inner class HttpMethodFunctionTests {
 
         @Test
+        fun `single entry`() {
+            //given
+            val routing = Routing(mockk()).apply {
+                get("{id}") { }
+            }
+
+            val specification = setOf(
+                    Endpoint(
+                            path = "/{id}",
+                            httpMethod = GET,
+                            pathParameters = setOf(
+                                    PathParameter("id")
+                            )
+                    )
+            )
+
+            //when
+            val implementation = KtorConverter(routing).conversionResult
+
+            //then
+            assertThat(implementation).containsExactlyInAnyOrderElementsOf(specification)
+        }
+
+        @Test
         fun `single entry, nested path`() {
             //given
             val routing = Routing(mockk()).apply {
@@ -95,7 +119,35 @@ class KtorConverterPathParameterTest {
     inner class RouteFunctionTests {
 
         @Test
-        fun `route function, nested entry, nested path`() {
+        fun `single entry`() {
+            //given
+            val routing = Routing(mockk()).apply {
+                route("/{id}") {
+                    get {
+
+                    }
+                }
+            }
+
+            val specification = setOf(
+                    Endpoint(
+                            path = "/{id}",
+                            httpMethod = GET,
+                            pathParameters = setOf(
+                                    PathParameter("id")
+                            )
+                    )
+            )
+
+            //when
+            val implementation = KtorConverter(routing).conversionResult
+
+            //then
+            assertThat(implementation).containsExactlyInAnyOrderElementsOf(specification)
+        }
+
+        @Test
+        fun `nested entry, nested path`() {
             //given
             val routing = Routing(mockk()).apply {
                 route("/todos") {

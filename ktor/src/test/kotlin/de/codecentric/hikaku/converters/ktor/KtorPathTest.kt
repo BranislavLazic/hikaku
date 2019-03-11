@@ -114,13 +114,39 @@ class KtorPathTest {
             assertThat(implementation).containsExactlyInAnyOrderElementsOf(specification)
         }
 
-
         @Test
         fun `nested route function having multiple endpoints`() {
             //given
             val routing = Routing(mockk()).apply {
                 route("/todo") {
                     route("/list") {
+                        get { }
+                    }
+
+                    post { }
+                    delete { }
+                }
+            }
+
+            val specification = setOf(
+                    Endpoint("/todo/list", GET),
+                    Endpoint("/todo", DELETE),
+                    Endpoint("/todo", POST)
+            )
+
+            //when
+            val implementation = KtorConverter(routing).conversionResult
+
+            //then
+            assertThat(implementation).containsExactlyInAnyOrderElementsOf(specification)
+        }
+
+        @Test
+        fun `nested route without leading slashes`() {
+            //given
+            val routing = Routing(mockk()).apply {
+                route("todo") {
+                    route("list") {
                         get { }
                     }
 
