@@ -12,6 +12,7 @@ class KtorPathTest {
 
     @Nested
     inner class SimplePathTests {
+
         @Test
         fun `http method function`() {
             //given
