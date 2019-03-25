@@ -9,12 +9,14 @@ import io.ktor.routing.*
 
 /**
  * Extracts and converts [Endpoint]s from ktor [Routing] object.
- * @param routing Ktor routing information.
+ * @param routing ktor routing information.
  */
 class KtorConverter(private val routing: Routing): AbstractEndpointConverter() {
 
     override val supportedFeatures = SupportedFeatures(
-            Feature.PathParameters
+            Feature.PathParameters,
+            Feature.QueryParameters,
+            Feature.HeaderParameters
     )
 
     override fun convert(): Set<Endpoint> {
