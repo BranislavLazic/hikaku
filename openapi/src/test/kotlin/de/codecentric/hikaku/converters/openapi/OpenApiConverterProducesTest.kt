@@ -17,7 +17,8 @@ class OpenApiConverterProducesTest {
                 Endpoint(
                         path = "/todos",
                         httpMethod = GET,
-                        produces = setOf("application/json")
+                        produces = setOf("application/json"),
+                        responses = setOf("200")
                 )
         )
 
@@ -33,7 +34,7 @@ class OpenApiConverterProducesTest {
         //given
         val file = Paths.get(this::class.java.classLoader.getResource("produces/produces_no_content_type.yaml").toURI())
         val implementation = setOf(
-                Endpoint("/todos", DELETE)
+                Endpoint("/todos", DELETE, responses = mutableSetOf("204"))
         )
 
         //when
@@ -51,7 +52,8 @@ class OpenApiConverterProducesTest {
                 Endpoint(
                         path = "/todos",
                         httpMethod = GET,
-                        produces = setOf("application/xml")
+                        produces = setOf("application/xml"),
+                        responses = setOf("200")
                 )
         )
 
@@ -70,7 +72,8 @@ class OpenApiConverterProducesTest {
                 Endpoint(
                         path = "/todos/query",
                         httpMethod = GET,
-                        produces = setOf("application/json", "text/plain")
+                        produces = setOf("application/json", "text/plain"),
+                        responses = setOf("200", "default")
                 )
         )
 

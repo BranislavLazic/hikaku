@@ -1,0 +1,23 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: Todo List
+paths:
+  /todos:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '422':
+          description: Unprocessable entity
+components:
+  schemas:
+    Todo:
+      type: array
+      items:
+        type: string

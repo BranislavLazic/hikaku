@@ -1,0 +1,15 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: Todo List
+paths:
+  /todos:
+    get:
+      description: ''
+      responses:
+        default:
+          description: No data
+          content:
+            text/plain:
+              example:
+                ''

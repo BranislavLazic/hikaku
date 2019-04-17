@@ -56,6 +56,7 @@ class OpenApiConverter private constructor(private val specificationContent: Str
         val extractQueryParameters = QueryParameterExtractor(openApi)
         val extractHeaderParameters = HeaderParameterExtractor(openApi)
         val extractPathParameters = PathParameterExtractor(openApi)
+        val extractResponses = ResponsesExtractor(openApi)
 
         return openApi.paths.flatMap { (path, pathItem) ->
             pathItem.httpMethods().map { (httpMethod: HttpMethod, operation: Operation?) ->
@@ -66,7 +67,8 @@ class OpenApiConverter private constructor(private val specificationContent: Str
                         pathParameters = extractPathParameters(operation),
                         headerParameters = extractHeaderParameters(operation),
                         consumes = extractConsumesMediaTypes(operation),
-                        produces = extractProduceMediaTypes(operation)
+                        produces = extractProduceMediaTypes(operation),
+                        responses = extractResponses(operation)
                 )
             }
         }
